@@ -171,10 +171,9 @@ function displayCard(host, cardUrl) {
 async function takeScreenshot() {
     soundManager.play('screenshot');
     
-    const cardElement = document.querySelector('.card-with-banner');
-    const bannerElement = document.querySelector('.card-banner');
+    const cardWrapper = document.querySelector('.card-with-banner');
     
-    if (!cardElement || !bannerElement) {
+    if (!cardWrapper) {
         alert('Please generate a card first!');
         return;
     }
@@ -186,26 +185,16 @@ async function takeScreenshot() {
     button.innerHTML = '📸 Saving...';
     button.disabled = true;
     
-    // Create a wrapper div with both banner and card
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'display: inline-block; background: white;';
-    wrapper.appendChild(bannerElement.cloneNode(true));
-    wrapper.appendChild(cardElement.cloneNode(true));
-    
-    // Temporarily add to document
-    document.body.appendChild(wrapper);
-    
     try {
-        const canvas = await html2canvas(wrapper, {
+        const canvas = await html2canvas(cardWrapper, {
             backgroundColor: '#ffffff',
             scale: 2,
             logging: false,
             useCORS: true,
-            allowTaint: true
+            allowTaint: false,
+            imageTimeout: 0,
+            removeContainer: true
         });
-        
-        // Remove temporary wrapper
-        document.body.removeChild(wrapper);
         
         canvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob);
@@ -232,12 +221,6 @@ async function takeScreenshot() {
         });
     } catch (error) {
         console.error('Screenshot error:', error);
-        
-        // Remove temporary wrapper if it exists
-        if (document.body.contains(wrapper)) {
-            document.body.removeChild(wrapper);
-        }
-        
         alert('Error taking screenshot. Make sure images are loaded!');
         button.innerHTML = originalText;
         button.disabled = false;
