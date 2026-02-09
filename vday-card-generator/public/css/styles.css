@@ -1,0 +1,651 @@
+/* ===================================
+   CSS VARIABLES - EASY CUSTOMIZATION
+   =================================== */
+:root {
+    --color-pink: #ff006e;
+    --color-purple: #8338ec;
+    --color-blue: #3a86ff;
+    --color-orange: #fb5607;
+    --color-cyan: #06ffa5;
+    --color-white: #ffffff;
+    --color-heart: #ff1744;
+    
+    --font-display: 'Fredoka One', 'Comic Sans MS', cursive;
+    --font-body: 'Quicksand', 'Comic Sans MS', cursive;
+    
+    --shadow-glow: 0 0 20px rgba(255, 0, 110, 0.5);
+    --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap');
+
+/* ===================================
+   GLOBAL RESET & BASE STYLES
+   =================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: linear-gradient(45deg, var(--color-pink), var(--color-purple), var(--color-blue), var(--color-orange));
+    background-size: 400% 400%;
+    animation: groovyGradient 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">💕</text></svg>'), auto;
+}
+
+@keyframes groovyGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ===================================
+   FLOATING HEARTS CONTAINER
+   =================================== */
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.floating-heart {
+    position: absolute;
+    font-size: 2em;
+    opacity: 0;
+    animation: floatHeart 8s ease-in forwards;
+    pointer-events: none;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(-100px) rotate(45deg) scale(1);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(180deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* ===================================
+   SPARKLE CANVAS
+   =================================== */
+#sparkleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* ===================================
+   LAVA LAMP BUBBLES
+   =================================== */
+.lava-bubble {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), rgba(255, 0, 110, 0.4));
+    animation: float 20s infinite ease-in-out;
+    z-index: 1;
+    filter: blur(2px);
+}
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0) translateX(0) scale(1); 
+    }
+    25% { 
+        transform: translateY(-100px) translateX(50px) scale(1.1); 
+    }
+    50% { 
+        transform: translateY(-200px) translateX(-30px) scale(0.9); 
+    }
+    75% { 
+        transform: translateY(-100px) translateX(-50px) scale(1.05); 
+    }
+}
+
+/* ===================================
+   MAIN CONTAINER
+   =================================== */
+.container {
+    position: relative;
+    z-index: 10;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* ===================================
+   TITLE STYLES
+   =================================== */
+.main-title {
+    font-family: var(--font-display);
+    font-size: 4em;
+    text-align: center;
+    color: var(--color-white);
+    text-shadow: 
+        3px 3px 0 var(--color-pink),
+        6px 6px 0 var(--color-purple),
+        9px 9px 0 var(--color-blue),
+        12px 12px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.title-word {
+    display: inline-block;
+    animation: titleBounce 2s ease-in-out infinite;
+}
+
+.title-word:nth-child(1) { animation-delay: 0s; }
+.title-word:nth-child(2) { animation-delay: 0.1s; }
+.title-word:nth-child(3) { animation-delay: 0.2s; }
+.title-word:nth-child(4) { animation-delay: 0.3s; }
+.title-word:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes titleBounce {
+    0%, 100% { 
+        transform: translateY(0) scale(1); 
+    }
+    50% { 
+        transform: translateY(-10px) scale(1.1); 
+    }
+}
+
+/* ===================================
+   BUTTON CONTAINER
+   =================================== */
+.button-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+/* ===================================
+   GROOVY BUTTONS
+   =================================== */
+.groovy-button {
+    padding: 25px 45px;
+    font-size: 1.8em;
+    font-weight: 700;
+    font-family: var(--font-display);
+    border: 6px solid var(--color-white);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 10px 0 rgba(0, 0, 0, 0.3),
+        0 15px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.groovy-button:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 
+        0 18px 0 rgba(0, 0, 0, 0.3),
+        0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.groovy-button:active {
+    transform: translateY(3px) scale(0.98);
+    box-shadow: 
+        0 7px 0 rgba(0, 0, 0, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-10 {
+    background: linear-gradient(135deg, var(--color-pink), #ff6f91);
+    color: var(--color-white);
+    animation: btnPulse 2s ease-in-out infinite;
+}
+
+.btn-20 {
+    background: linear-gradient(135deg, var(--color-purple), #a855f7);
+    color: var(--color-white);
+    animation: btnPulse 2s ease-in-out infinite 0.5s;
+}
+
+@keyframes btnPulse {
+    0%, 100% { 
+        filter: brightness(1); 
+    }
+    50% { 
+        filter: brightness(1.2); 
+    }
+}
+
+.btn-icon {
+    font-size: 1.5em;
+    animation: iconSpin 3s linear infinite;
+}
+
+@keyframes iconSpin {
+    0%, 90% { transform: rotate(0deg); }
+    95% { transform: rotate(20deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.btn-text small {
+    font-size: 0.5em;
+    display: block;
+    margin-top: 5px;
+    font-family: var(--font-body);
+    font-weight: 600;
+}
+
+/* Button shine effect */
+.button-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.groovy-button:hover .button-shine {
+    left: 150%;
+}
+
+/* ===================================
+   HOST DROPDOWN
+   =================================== */
+.host-dropdown {
+    display: none;
+    margin-top: 15px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 25px;
+    border: 4px solid var(--color-purple);
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    animation: dropdownSlide 0.3s ease-out;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.host-dropdown.show {
+    display: block;
+}
+
+.host-option {
+    padding: 15px 20px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: var(--color-white);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2em;
+    font-weight: 600;
+    border: 3px solid var(--color-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.host-option::before {
+    content: '💕';
+    position: absolute;
+    left: 10px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.host-option:hover {
+    transform: scale(1.05) translateX(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    padding-left: 40px;
+}
+
+.host-option:hover::before {
+    opacity: 1;
+    left: 15px;
+}
+
+/* ===================================
+   CARD DISPLAY
+   =================================== */
+.card-display {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 35px;
+    padding: 50px;
+    box-shadow: var(--shadow-card);
+    border: 10px solid var(--color-white);
+    min-height: 600px;
+    position: relative;
+    overflow: hidden;
+    animation: cardReveal 0.5s ease-out;
+}
+
+@keyframes cardReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.card-display::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(255, 0, 110, 0.05), 
+        transparent);
+    animation: shimmer 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===================================
+   CARD CONTENT
+   =================================== */
+.card-content {
+    text-align: center;
+    animation: contentFadeIn 0.8s ease-out;
+}
+
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-header {
+    font-family: var(--font-display);
+    font-size: 3em;
+    color: var(--color-pink);
+    margin-bottom: 25px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+    animation: headerPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes headerPop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.host-image {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 10px solid var(--color-purple);
+    margin: 25px auto;
+    display: block;
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 15px rgba(131, 56, 236, 0.1);
+    object-fit: cover;
+    animation: imageBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s ease;
+}
+
+.host-image:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 0 0 20px rgba(131, 56, 236, 0.2);
+}
+
+@keyframes imageBounce {
+    0% { 
+        transform: scale(0) rotate(-180deg); 
+        opacity: 0;
+    }
+    60% { transform: scale(1.15) rotate(10deg); }
+    100% { 
+        transform: scale(1) rotate(0deg); 
+        opacity: 1;
+    }
+}
+
+.card-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 25px;
+    margin: 35px 0;
+    border: 6px solid var(--color-pink);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(255, 0, 110, 0.3);
+    animation: cardImageSlide 0.8s ease-out 0.2s both;
+}
+
+@keyframes cardImageSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===================================
+   SCREENSHOT BUTTON
+   =================================== */
+.screenshot-btn {
+    background: linear-gradient(135deg, var(--color-cyan), var(--color-blue));
+    color: var(--color-white);
+    padding: 20px 40px;
+    font-size: 1.5em;
+    font-family: var(--font-display);
+    border: 5px solid var(--color-white);
+    border-radius: 35px;
+    cursor: pointer;
+    margin-top: 30px;
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    transition: all 0.3s ease;
+    animation: btnWiggle 2s ease-in-out infinite;
+}
+
+@keyframes btnWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+}
+
+.screenshot-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+        0 13px 0 rgba(0, 0, 0, 0.3),
+        0 20px 40px rgba(6, 255, 165, 0.4);
+    animation: none;
+}
+
+.screenshot-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================
+   PLACEHOLDER STYLES
+   =================================== */
+.placeholder {
+    color: #999;
+    font-size: 1.8em;
+    padding: 120px 30px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.placeholder-heart {
+    font-size: 4em;
+    animation: heartBeat 1.5s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
+}
+
+.arrow-bounce {
+    font-size: 2em;
+    margin-top: 30px;
+    animation: arrowBounce 1s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+}
+
+/* ===================================
+   SCROLLBAR STYLING
+   =================================== */
+::-webkit-scrollbar {
+    width: 14px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--color-pink), var(--color-purple));
+    border-radius: 10px;
+    border: 2px solid var(--color-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--color-purple), var(--color-blue));
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.5em;
+    }
+    
+    .groovy-button {
+        padding: 20px 35px;
+        font-size: 1.4em;
+    }
+    
+    .card-header {
+        font-size: 2.2em;
+    }
+    
+    .host-image {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .card-display {
+        padding: 30px;
+    }
+    
+    .placeholder {
+        font-size: 1.4em;
+        padding: 80px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-title {
+        font-size: 2em;
+        gap: 10px;
+    }
+    
+    .button-container {
+        gap: 15px;
+    }
+    
+    .groovy-button {
+        padding: 15px 25px;
+        font-size: 1.2em;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-icon {
+        font-size: 1.3em;
+    }
+}
+
+/* ===================================
+   LOADING ANIMATION
+   =================================== */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

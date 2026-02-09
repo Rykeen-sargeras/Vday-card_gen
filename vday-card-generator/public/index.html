@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Groovy V-Day Card Generator 💕</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Floating hearts animation -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <!-- Lava lamp bubbles -->
+    <div class="lava-bubble" style="width: 150px; height: 150px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="lava-bubble" style="width: 200px; height: 200px; top: 60%; right: 15%; animation-delay: 3s;"></div>
+    <div class="lava-bubble" style="width: 120px; height: 120px; bottom: 20%; left: 20%; animation-delay: 6s;"></div>
+    <div class="lava-bubble" style="width: 180px; height: 180px; top: 30%; right: 25%; animation-delay: 9s;"></div>
+
+    <!-- Sparkle effect on cursor -->
+    <canvas id="sparkleCanvas"></canvas>
+
+    <div class="container">
+        <h1 class="main-title">
+            <span class="title-word">✨</span>
+            <span class="title-word">Groovy</span>
+            <span class="title-word">V-Day</span>
+            <span class="title-word">Cards</span>
+            <span class="title-word">✨</span>
+        </h1>
+        
+        <div class="button-container">
+            <button class="groovy-button btn-10" onclick="generateRandom10()" id="btn10">
+                <span class="btn-icon">💸</span>
+                <span class="btn-text">$10<br><small>Random Everything</small></span>
+                <div class="button-shine"></div>
+            </button>
+            
+            <div style="position: relative;">
+                <button class="groovy-button btn-20" onclick="toggleDropdown()" id="btn20">
+                    <span class="btn-icon">💎</span>
+                    <span class="btn-text">$20<br><small>Random Card + Pick Host</small></span>
+                    <div class="button-shine"></div>
+                </button>
+                <div id="hostDropdown" class="host-dropdown"></div>
+            </div>
+        </div>
+
+        <div id="cardDisplay" class="card-display">
+            <div class="placeholder">
+                <div class="placeholder-heart">💕</div>
+                <p>Click a button to generate your groovy Valentine's card!</p>
+                <div class="arrow-bounce">👇</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="clickSound" preload="auto">
+        <source src="sounds/click.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="generateSound" preload="auto">
+        <source src="sounds/generate.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="screenshotSound" preload="auto">
+        <source src="sounds/screenshot.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="js/hearts.js"></script>
+    <script src="js/sparkle.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
