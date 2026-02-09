@@ -140,21 +140,25 @@ function displayCard(host, cardUrl) {
     setTimeout(() => {
         display.innerHTML = `
             <div class="card-content">
-                <div class="card-with-overlay">
+                <div class="card-banner">
+                    <div class="banner-left">
+                        <img src="${host.image}" 
+                             alt="${host.name}" 
+                             class="banner-host-image" 
+                             crossorigin="anonymous"
+                             onerror="this.src='https://via.placeholder.com/80?text=${host.name}'">
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-to">TO:</div>
+                        <div class="banner-name">${host.name}</div>
+                    </div>
+                </div>
+                <div class="card-with-banner">
                     <img src="${cardUrl}" 
                          alt="Valentine Card" 
                          class="card-image" 
                          crossorigin="anonymous"
                          onerror="this.src='https://via.placeholder.com/700x500?text=Card'">
-                    <div class="card-overlay">
-                        <div class="card-to-label">TO:</div>
-                        <div class="card-host-name">${host.name}</div>
-                        <img src="${host.image}" 
-                             alt="${host.name}" 
-                             class="card-host-image" 
-                             crossorigin="anonymous"
-                             onerror="this.src='https://via.placeholder.com/120?text=${host.name}'">
-                    </div>
                 </div>
                 <button class="screenshot-btn" onclick="takeScreenshot()">
                     📸 Screenshot & Download
@@ -167,22 +171,41 @@ function displayCard(host, cardUrl) {
 async function takeScreenshot() {
     soundManager.play('screenshot');
     
-    const cardElement = document.getElementById('cardDisplay');
-    const button = cardElement.querySelector('.screenshot-btn');
+    const cardElement = document.querySelector('.card-with-banner');
+    const bannerElement = document.querySelector('.card-banner');
+    
+    if (!cardElement || !bannerElement) {
+        alert('Please generate a card first!');
+        return;
+    }
+    
+    const button = document.querySelector('.screenshot-btn');
     
     // Change button text
     const originalText = button.innerHTML;
     button.innerHTML = '📸 Saving...';
     button.disabled = true;
     
+    // Create a wrapper div with both banner and card
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display: inline-block; background: white;';
+    wrapper.appendChild(bannerElement.cloneNode(true));
+    wrapper.appendChild(cardElement.cloneNode(true));
+    
+    // Temporarily add to document
+    document.body.appendChild(wrapper);
+    
     try {
-        const canvas = await html2canvas(cardElement, {
+        const canvas = await html2canvas(wrapper, {
             backgroundColor: '#ffffff',
             scale: 2,
             logging: false,
             useCORS: true,
             allowTaint: true
         });
+        
+        // Remove temporary wrapper
+        document.body.removeChild(wrapper);
         
         canvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob);
@@ -209,6 +232,12 @@ async function takeScreenshot() {
         });
     } catch (error) {
         console.error('Screenshot error:', error);
+        
+        // Remove temporary wrapper if it exists
+        if (document.body.contains(wrapper)) {
+            document.body.removeChild(wrapper);
+        }
+        
         alert('Error taking screenshot. Make sure images are loaded!');
         button.innerHTML = originalText;
         button.disabled = false;
