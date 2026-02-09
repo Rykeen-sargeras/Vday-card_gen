@@ -140,17 +140,22 @@ function displayCard(host, cardUrl) {
     setTimeout(() => {
         display.innerHTML = `
             <div class="card-content">
-                <div class="card-header">TO: ${host.name}</div>
-                <img src="${host.image}" 
-                     alt="${host.name}" 
-                     class="host-image" 
-                     crossorigin="anonymous"
-                     onerror="this.src='https://via.placeholder.com/220?text=${host.name}'">
-                <img src="${cardUrl}" 
-                     alt="Valentine Card" 
-                     class="card-image" 
-                     crossorigin="anonymous"
-                     onerror="this.src='https://via.placeholder.com/600x400?text=Card'">
+                <div class="card-with-overlay">
+                    <img src="${cardUrl}" 
+                         alt="Valentine Card" 
+                         class="card-image" 
+                         crossorigin="anonymous"
+                         onerror="this.src='https://via.placeholder.com/700x500?text=Card'">
+                    <div class="card-overlay">
+                        <div class="card-to-label">TO:</div>
+                        <div class="card-host-name">${host.name}</div>
+                        <img src="${host.image}" 
+                             alt="${host.name}" 
+                             class="card-host-image" 
+                             crossorigin="anonymous"
+                             onerror="this.src='https://via.placeholder.com/120?text=${host.name}'">
+                    </div>
+                </div>
                 <button class="screenshot-btn" onclick="takeScreenshot()">
                     📸 Screenshot & Download
                 </button>
