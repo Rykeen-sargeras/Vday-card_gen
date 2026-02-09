@@ -401,6 +401,17 @@ body {
     animation: contentFadeIn 0.8s ease-out;
 }
 
+/* Unified wrapper — banner + card are same width, captured together */
+.card-capture-area {
+    display: inline-block;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
 .card-banner {
     display: flex;
     align-items: center;
@@ -408,6 +419,7 @@ body {
     background: linear-gradient(135deg, var(--color-pink), var(--color-purple));
     padding: 20px 30px;
     margin: 0;
+    width: 100%;
     animation: bannerSlide 0.6s ease-out;
 }
 
@@ -456,13 +468,17 @@ body {
     line-height: 1;
 }
 
-.card-with-banner {
-    display: inline-block;
-    max-width: 700px;
-    margin: 0 auto;
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+.card-image-wrapper {
+    width: 100%;
+    line-height: 0; /* kill gap below image */
+}
+
+.card-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+    animation: cardImageSlide 0.8s ease-out 0.2s both;
 }
 
 @keyframes contentFadeIn {
@@ -474,17 +490,6 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.card-image {
-    width: 100%;
-    max-width: 700px;
-    height: 500px;
-    object-fit: cover;
-    margin: 0;
-    display: block;
-    border: none;
-    animation: cardImageSlide 0.8s ease-out 0.2s both;
 }
 
 @keyframes cardImageSlide {
@@ -606,10 +611,6 @@ body {
         font-size: 1.4em;
     }
     
-    .card-image {
-        height: 400px;
-    }
-    
     .card-banner {
         padding: 15px 20px;
     }
@@ -652,10 +653,6 @@ body {
     
     .btn-icon {
         font-size: 1.3em;
-    }
-    
-    .card-image {
-        height: 300px;
     }
     
     .card-banner {

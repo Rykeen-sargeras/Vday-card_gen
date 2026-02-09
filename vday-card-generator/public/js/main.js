@@ -136,29 +136,32 @@ function displayCard(host, cardUrl) {
     // Show loading state
     display.innerHTML = '<div class="loading">💕</div>';
     
+    // Store current card data for screenshot
+    window._currentCard = { host, cardUrl };
+    
     // Create card after brief delay for effect
     setTimeout(() => {
         display.innerHTML = `
             <div class="card-content">
-                <div class="card-banner">
-                    <div class="banner-left">
-                        <img src="${host.image}" 
-                             alt="${host.name}" 
-                             class="banner-host-image" 
-                             crossorigin="anonymous"
-                             onerror="this.src='https://via.placeholder.com/80?text=${host.name}'">
+                <div class="card-capture-area" id="cardCaptureArea">
+                    <div class="card-banner">
+                        <div class="banner-left">
+                            <img src="${host.image}" 
+                                 alt="${host.name}" 
+                                 class="banner-host-image"
+                                 onerror="this.style.display='none'">
+                        </div>
+                        <div class="banner-right">
+                            <div class="banner-to">TO:</div>
+                            <div class="banner-name">${host.name}</div>
+                        </div>
                     </div>
-                    <div class="banner-right">
-                        <div class="banner-to">TO:</div>
-                        <div class="banner-name">${host.name}</div>
+                    <div class="card-image-wrapper">
+                        <img src="${cardUrl}" 
+                             alt="Valentine Card" 
+                             class="card-image"
+                             onerror="this.alt='Card failed to load'">
                     </div>
-                </div>
-                <div class="card-with-banner">
-                    <img src="${cardUrl}" 
-                         alt="Valentine Card" 
-                         class="card-image" 
-                         crossorigin="anonymous"
-                         onerror="this.src='https://via.placeholder.com/700x500?text=Card'">
                 </div>
                 <button class="screenshot-btn" onclick="takeScreenshot()">
                     📸 Screenshot & Download
@@ -171,36 +174,89 @@ function displayCard(host, cardUrl) {
 async function takeScreenshot() {
     soundManager.play('screenshot');
     
-    const cardWrapper = document.querySelector('.card-with-banner');
-    
-    if (!cardWrapper) {
+    const cardData = window._currentCard;
+    if (!cardData) {
         alert('Please generate a card first!');
         return;
     }
     
     const button = document.querySelector('.screenshot-btn');
-    
-    // Change button text
     const originalText = button.innerHTML;
     button.innerHTML = '📸 Saving...';
     button.disabled = true;
     
     try {
-        const canvas = await html2canvas(cardWrapper, {
-            backgroundColor: '#ffffff',
-            scale: 2,
-            logging: false,
-            useCORS: true,
-            allowTaint: false,
-            imageTimeout: 0,
-            removeContainer: true
-        });
+        // Load both images first
+        const [hostImg, cardImg] = await Promise.all([
+            loadImage(cardData.host.image),
+            loadImage(cardData.cardUrl)
+        ]);
         
+        // Canvas dimensions — card width drives everything
+        const CARD_WIDTH = cardImg.naturalWidth * 2; // 2x for quality
+        const CARD_HEIGHT = cardImg.naturalHeight * 2;
+        const BANNER_HEIGHT = 120; // matches the CSS banner height feel
+        const TOTAL_WIDTH = CARD_WIDTH;
+        const TOTAL_HEIGHT = BANNER_HEIGHT + CARD_HEIGHT;
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = TOTAL_WIDTH;
+        canvas.height = TOTAL_HEIGHT;
+        const ctx = canvas.getContext('2d');
+        
+        // --- Draw Banner ---
+        const gradient = ctx.createLinearGradient(0, 0, TOTAL_WIDTH, BANNER_HEIGHT);
+        gradient.addColorStop(0, '#ff006e');
+        gradient.addColorStop(1, '#8338ec');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, TOTAL_WIDTH, BANNER_HEIGHT);
+        
+        // Draw host avatar (circular clipped)
+        const avatarSize = 80;
+        const avatarX = 24;
+        const avatarY = (BANNER_HEIGHT - avatarSize) / 2;
+        
+        ctx.save();
+        // White ring behind avatar
+        ctx.beginPath();
+        ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2 + 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        // Clip to circle and draw host image
+        ctx.beginPath();
+        ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(hostImg, avatarX, avatarY, avatarSize, avatarSize);
+        ctx.restore();
+        
+        // Draw "TO:" text
+        const textX = avatarX + avatarSize + 20;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 22px "Fredoka One", "Comic Sans MS", cursive';
+        ctx.fillText('TO:', textX, avatarY + 28);
+        
+        // Draw host name
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 42px "Fredoka One", "Comic Sans MS", cursive';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 6;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.fillText(cardData.host.name, textX, avatarY + 76);
+        ctx.shadowColor = 'transparent';
+        
+        // --- Draw Card Image ---
+        ctx.drawImage(cardImg, 0, BANNER_HEIGHT, CARD_WIDTH, CARD_HEIGHT);
+        
+        // --- Export ---
         canvas.toBlob((blob) => {
+            if (!blob) {
+                throw new Error('Canvas toBlob returned null');
+            }
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             const timestamp = new Date().getTime();
-            link.download = `groovy-vday-card-${timestamp}.png`;
+            link.download = `groovy-vday-card-${cardData.host.name}-${timestamp}.png`;
             link.href = url;
             link.click();
             URL.revokeObjectURL(url);
@@ -215,16 +271,29 @@ async function takeScreenshot() {
                 );
             }
             
-            // Reset button
-            button.innerHTML = originalText;
-            button.disabled = false;
-        });
+            button.innerHTML = '✅ Saved!';
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        }, 'image/png');
+        
     } catch (error) {
         console.error('Screenshot error:', error);
-        alert('Error taking screenshot. Make sure images are loaded!');
+        alert('Error creating screenshot. Please try generating the card again.');
         button.innerHTML = originalText;
         button.disabled = false;
     }
+}
+
+// Helper: load an image as a promise
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+        img.src = src;
+    });
 }
 
 // Button interaction effects
